@@ -1,7 +1,7 @@
 global using WebAplicationForServices.Shared;
-    using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
-using WebAplicationForServices.Server.Data;
+global using Microsoft.EntityFrameworkCore;
+global using WebAplicationForServices.Server.Data;
+global using WebAplicationForServices.Server.Services.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
