@@ -34,7 +34,7 @@ namespace WebAplicationForServices.Client.Services.ProductService
 
         public async Task<List<string>> GetProductSearchSuggestons(string searchText)
         {
-            var result = await http.GetFromJsonAsync<ServiceResponse<List<string>>>($"api/product/searchsuggestions/{searchText}");
+            var result = await http.GetFromJsonAsync<ServiceResponse<List<string>>>($"api/product/searchsuggestons/{searchText}");
 
             return result.Data;
         }
