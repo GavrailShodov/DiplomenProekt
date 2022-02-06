@@ -2,10 +2,18 @@
 {
     public interface IProductService
     {
+
+        event Action ProductsChaged;
         public List<Product> Products { get; set; }
+
+        public string Message { get; set; }
 
         Task GetProducts();
 
         Task<ServiceResponse<Product>> GetProductAsync(int productId);
+
+        Task SearchProducts(string searchText);
+
+        Task <List<string>> GetProductSearchSuggestons(string searchText);
     }
 }

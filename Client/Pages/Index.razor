@@ -1,9 +1,27 @@
-﻿@page "/"
+﻿@inject IProductService productService;
+@page "/"
+@page "/search/{searchText}"
 
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
 <ProductsList/>
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+    [Parameter]
+    public string? searchText { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (searchText != null)
+        {
+            await productService.SearchProducts(searchText);
+        }
+        else
+        {
+            await productService.GetProducts();
+        }
+
+    }
+}
