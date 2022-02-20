@@ -2,6 +2,7 @@ global using WebAplicationForServices.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using WebAplicationForServices.Server.Data;
 global using WebAplicationForServices.Server.Services.ProductService;
+global using WebAplicationForServices.Server.Services.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 var app = builder.Build();
 

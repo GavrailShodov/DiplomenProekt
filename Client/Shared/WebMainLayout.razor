@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+
+    <main>
+        
+
+        <div class="top-row px-2">
+
+             <NavLink  href="" >
+                <span class="oi oi-home" aria-hidden="true"></span> 
+            </NavLink>
+            <div class="m-4">
+                   <UserButton />
+            </div>
+            
+            <Search/>
+           
+        </div>
+
+
+        <article class="content px-2">
+            @Body
+        </article>
+    </main>
+</div>
