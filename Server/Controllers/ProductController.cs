@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAplicationForServices.Server.Data;
@@ -45,6 +46,27 @@ namespace WebAplicationForServices.Server.Controllers
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchText)
         {
             var result = await productService.GetProductSearchSuggestions(searchText);
+            return Ok(result);
+        }
+
+        [HttpPost, Authorize]
+        public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product)
+        {
+            var result = await productService.CreateProduct(product);
+            return Ok(result);
+        }
+
+        [HttpPut, Authorize]
+        public async Task<ActionResult<ServiceResponse<Product>>> UpdateProduct(Product product)
+        {
+            var result = await productService.UpdateProduct(product);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}"), Authorize]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int id)
+        {
+            var result = await productService.DeleteProduct(id);
             return Ok(result);
         }
     }

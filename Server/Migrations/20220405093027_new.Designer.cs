@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAplicationForServices.Server.Data;
 
@@ -11,9 +12,10 @@ using WebAplicationForServices.Server.Data;
 namespace WebAplicationForServices.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220405093027_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace WebAplicationForServices.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -56,7 +55,6 @@ namespace WebAplicationForServices.Server.Migrations
                         new
                         {
                             Id = 1,
-                            Deleted = false,
                             Description = "Az sum deskription 1 dasdasdasdasdsadasdasdasdasads",
                             ImageUrl = "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                             Price = 1.2m,
@@ -65,7 +63,6 @@ namespace WebAplicationForServices.Server.Migrations
                         new
                         {
                             Id = 2,
-                            Deleted = false,
                             Description = "Az sum deskription 2 dasdasdasdasdsadasdasdasdasads",
                             ImageUrl = "https://napravisam.net/wp-content/uploads/1246.jpg",
                             Price = 1.2m,
@@ -74,7 +71,6 @@ namespace WebAplicationForServices.Server.Migrations
                         new
                         {
                             Id = 3,
-                            Deleted = false,
                             Description = "Az sum deskription 3 dasdasdasdasdsadasdasdasdasads",
                             ImageUrl = "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                             Price = 1.2m,

@@ -1,0 +1,68 @@
+﻿@page "/myproducts"
+@inject IProductService ProductService
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+<h3>Products</h3>
+
+
+    <button class="btn btn-primary float-end" @onclick="CreateProduct">
+        <i class="oi oi-plus"></i> Add new product
+    </button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Product</th>
+                
+                <th>Price</th>
+            
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="ProductService.Products" Context="product">
+                <tr>
+                    <td><img src="@product.ImageUrl" /></td>
+                    <td>@product.Title</td>
+                    <td>@product.Price</td>
+                <td>
+                    <button type="button" class="btn btn-danger float-start" @onclick="DeleteProduct">
+                     Delete Product
+                   </button>
+                    
+                </td>
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+
+
+@code {
+
+    Product product = new Product();
+
+    protected override void OnInitialized()
+    {
+        ProductService.ProductsChaged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductsChaged -= StateHasChanged;
+    }
+
+    public async void DeleteProduct()
+    {
+        
+        await ProductService.DeleteProduct(product);
+        NavigationManager.NavigateTo("/myproducts");
+        
+    }
+    
+
+    void CreateProduct()
+    {
+        NavigationManager.NavigateTo("/product");
+    }
+}

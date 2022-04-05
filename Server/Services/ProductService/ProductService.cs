@@ -14,9 +14,9 @@ namespace WebAplicationForServices.Server.Services.ProductService
 
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
-           var responce =  new ServiceResponse<Product>();
+            var responce = new ServiceResponse<Product>();
             var product = await context.Products.FindAsync(productId);
-            if(product == null)
+            if (product == null)
             {
                 responce.Success = false;
                 responce.Message = "This product does not exist.";
@@ -32,7 +32,9 @@ namespace WebAplicationForServices.Server.Services.ProductService
         {
             var responce = new ServiceResponse<List<Product>>()
             {
-                Data =  await context.Products.ToListAsync()
+               Data =  await context.Products
+                    .Where(p => !p.Deleted)
+                    .ToListAsync()
             };
             return responce;
         }
@@ -56,14 +58,14 @@ namespace WebAplicationForServices.Server.Services.ProductService
 
                     foreach (var word in words)
                     {
-                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word)) 
+                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
                         {
                             result.Add(word);
                         }
                     }
                 }
 
-        }
+            }
 
             return new ServiceResponse<List<string>> { Data = result };
         }
@@ -85,5 +87,55 @@ namespace WebAplicationForServices.Server.Services.ProductService
                             p.Description.ToLower().Contains(searchText.ToLower()))
                             .ToListAsync();
         }
+
+        public async Task<ServiceResponse<Product>> CreateProduct(Product product)
+        {
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
+            return new ServiceResponse<Product> { Data = product };
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteProduct(int productId)
+        {
+            var dbProduct = await context.Products.FindAsync(productId);
+            if (dbProduct == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Product not found."
+                };
+            }
+
+            dbProduct.Deleted = true;
+
+            await context.SaveChangesAsync();
+            return new ServiceResponse<bool> { Data = true };
+        }
+
+        public async Task<ServiceResponse<Product>> UpdateProduct(Product product)
+        {
+            var dbProduct = await context.Products.FindAsync(product.Id);
+            if (dbProduct == null)
+            {
+                return new ServiceResponse<Product>
+                {
+                    Success = false,
+                    Message = "Product not found."
+                };
+            }
+
+            dbProduct.Title = product.Title;
+            dbProduct.Description = product.Description;
+            dbProduct.ImageUrl = product.ImageUrl;
+            dbProduct.Price = product.Price;
+            dbProduct.Deleted = product.Deleted;
+                
+            
+
+            await context.SaveChangesAsync();
+            return new ServiceResponse<Product> { Data = product };
+        }
     }
-}
+    }

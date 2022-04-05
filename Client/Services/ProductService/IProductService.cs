@@ -15,5 +15,9 @@
         Task SearchProducts(string searchText);
 
         Task <List<string>> GetProductSearchSuggestons(string searchText);
+
+        Task<Product> CreateProduct(Product product);
+        Task<Product> UpdateProduct(Product product);
+        Task DeleteProduct(Product product);
     }
 }

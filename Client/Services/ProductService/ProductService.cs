@@ -51,5 +51,26 @@ namespace WebAplicationForServices.Client.Services.ProductService
             ProductsChaged.Invoke();
            
         }
+
+        public async Task<Product> CreateProduct(Product product)
+        {
+            var result = await http.PostAsJsonAsync("api/product", product);
+            var newProduct = (await result.Content
+                .ReadFromJsonAsync<ServiceResponse<Product>>()).Data;
+            return newProduct;
+        }
+
+        public async Task DeleteProduct(Product product)
+        {
+            await http.DeleteAsync($"api/product/{product.Id}");
+        }
+
+        public async Task<Product> UpdateProduct(Product product)
+        {
+            var result = await http.PutAsJsonAsync($"api/product", product);
+            var content = await result.Content.ReadFromJsonAsync<ServiceResponse<Product>>();
+            return content.Data;
+        }
+
     }
 }
