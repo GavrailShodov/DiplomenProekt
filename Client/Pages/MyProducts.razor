@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            <Virtualize Items="ProductService.Products" Context="product">
+            <Virtualize Items="products" Context="product">
                 <tr>
                     <td><img src="@product.ImageUrl" /></td>
                     <td>@product.Title</td>
@@ -42,14 +42,11 @@
 
     Product product = new Product();
 
-    protected override void OnInitialized()
-    {
-        ProductService.ProductsChaged += StateHasChanged;
-    }
+    List<Product> products = new List<Product>();
 
-    public void Dispose()
+    protected override async Task OnInitializedAsync()
     {
-        ProductService.ProductsChaged -= StateHasChanged;
+        products = await ProductService.GetMyProductsAsync();
     }
 
     public async void DeleteProduct()

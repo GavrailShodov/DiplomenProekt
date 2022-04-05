@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WebAplicationForServices.Server.Data;
 
 namespace WebAplicationForServices.Server.Controllers
@@ -52,7 +53,8 @@ namespace WebAplicationForServices.Server.Controllers
         [HttpPost, Authorize]
         public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product)
         {
-            var result = await productService.CreateProduct(product);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = await productService.CreateProduct(product,userId);
             return Ok(result);
         }
 
@@ -69,5 +71,13 @@ namespace WebAplicationForServices.Server.Controllers
             var result = await productService.DeleteProduct(id);
             return Ok(result);
         }
+
+        [HttpGet("myproducts"), Authorize]
+        public async Task<List<Product>> GetMyProducts()
+        {
+            var result = await productService.GetMyProducts(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            return result;
+        }
+            
     }
 }

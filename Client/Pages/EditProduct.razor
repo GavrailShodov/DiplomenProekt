@@ -31,6 +31,10 @@ else
             <label for="description">Description</label>
             <InputTextArea id="description" @bind-Value="product.Description" class="form-control"></InputTextArea>
        </div>
+       <div class="mb-0">
+       <label for="imageUrl">Price</label>
+       <InputNumber @bind-Value="product.Price" class="form-control" ></InputNumber>
+        </div>
     <button type="submit" class="btn btn-primary float-end">@btnText</button>
     <ValidationSummary></ValidationSummary>
 </EditForm>

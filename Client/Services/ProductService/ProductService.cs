@@ -72,5 +72,11 @@ namespace WebAplicationForServices.Client.Services.ProductService
             return content.Data;
         }
 
+        public async Task<List<Product>> GetMyProductsAsync()
+        {
+            var result = await http.GetFromJsonAsync<List<Product>>($"api/product/myproducts");
+            return result;
+        }
+
     }
 }

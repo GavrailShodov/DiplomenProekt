@@ -88,8 +88,9 @@ namespace WebAplicationForServices.Server.Services.ProductService
                             .ToListAsync();
         }
 
-        public async Task<ServiceResponse<Product>> CreateProduct(Product product)
+        public async Task<ServiceResponse<Product>> CreateProduct(Product product,int userId)
         {
+            product.UserId = userId;
             context.Products.Add(product);
             await context.SaveChangesAsync();
             return new ServiceResponse<Product> { Data = product };
@@ -131,11 +132,16 @@ namespace WebAplicationForServices.Server.Services.ProductService
             dbProduct.ImageUrl = product.ImageUrl;
             dbProduct.Price = product.Price;
             dbProduct.Deleted = product.Deleted;
-                
-            
 
             await context.SaveChangesAsync();
             return new ServiceResponse<Product> { Data = product };
         }
+
+        public async Task<List<Product>> GetMyProducts(int userId)
+        {
+            var products = await context.Products.Where(u => u.UserId == userId).ToListAsync();
+            return products;
+        }
+
     }
     }
