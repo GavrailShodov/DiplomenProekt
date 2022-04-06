@@ -1,7 +1,9 @@
 ﻿@page "/myproducts"
 @inject IProductService ProductService
+@inject IOrderService OrderService
 @inject NavigationManager NavigationManager
 @attribute [Authorize]
+@inject IJSRuntime JSRuntime
 
 <h3>Products</h3>
 
@@ -21,40 +23,54 @@
             </tr>
         </thead>
         <tbody>
-            <Virtualize Items="products" Context="product">
+             @foreach(var product in products)
+             {
                 <tr>
                     <td><img src="@product.ImageUrl" /></td>
                     <td>@product.Title</td>
                     <td>@product.Price</td>
                 <td>
-                    <button type="button" class="btn btn-danger float-start" @onclick="DeleteProduct">
+                    <button type="button" class="btn btn-danger float-start" @onclick="() =>DeleteProduct(product)">
                      Delete Product
                    </button>
-                    
                 </td>
-            </tr>
-        </Virtualize>
+               </tr>
+               @foreach(var currentOrder in orders.Where(id => id.ProductId == product.Id))
+            {
+                <tr>
+                    
+                    <td>@currentOrder.Name</td>
+                    <td>@currentOrder.Email</td>
+                    <td>@currentOrder.Phone</td>
+                
+               </tr>
+            }
+        }
     </tbody>
 </table>
 
 
 @code {
-
     Product product = new Product();
 
     List<Product> products = new List<Product>();
+    List<Order> orders = new List<Order>();
 
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetMyProductsAsync();
+        orders = await OrderService.GetOrdersAsync();
     }
 
-    public async void DeleteProduct()
+    private async void DeleteProduct(Product product)
     {
-        
-        await ProductService.DeleteProduct(product);
-        NavigationManager.NavigateTo("/myproducts");
-        
+           bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"Do you really want to delete '{product.Title}'?");
+        if (confirmed)
+        {
+            await ProductService.DeleteProduct(product);
+            NavigationManager.NavigateTo("/myproducts");
+        }
     }
     
 

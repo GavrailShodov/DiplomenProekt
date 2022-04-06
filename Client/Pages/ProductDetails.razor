@@ -1,5 +1,7 @@
 ﻿@page "/product/{id:int}"
+@using WebAplicationForServices.Client.Services.OrdersService
 @inject IProductService productService;
+@inject IOrderService orderService;
 
 @if(product==null)
 {
@@ -23,11 +25,36 @@ else
             </h4>
 
         </div>
+        <div class="order">
+            <EditForm Model="order" OnValidSubmit="CreateOrder">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-0">
+            <label for="name">Your name</label>
+            <InputText id="name" @bind-Value="order.Name" class="form-control"></InputText>
+        </div>
+        <div class="mb-0">
+            <label for="email">Email</label>
+            <InputText id="email" @bind-Value="order.Email" class="form-control"></InputText>
+        </div>
+        <div class="mb-0">
+            <label for="phone">Phone</label>
+            <InputTextArea id="phone" @bind-Value="order.Phone" class="form-control"></InputTextArea>
+       </div>
+       <div class="mb-0">
+       <label for="imageUrl">Price</label>
+       <InputNumber @bind-Value="product.Price" class="form-control" ></InputNumber>
+        </div>
+    <button type="submit" class="btn btn-primary float-end">Reserve</button>
+    <ValidationSummary></ValidationSummary>
+</EditForm>
+
+        </div>
     </div>
 }
 
 
 @code {
+    private Order order = new Order();
     private Product? product = null;
     private string message = string.Empty;
     [Parameter]
@@ -45,5 +72,11 @@ else
         {
             product = result.Data;
         }
+    }
+
+    private async void CreateOrder()
+    {
+        order.ProductId = Id;
+        await orderService.CreateOrderAsync(order);
     }
 }

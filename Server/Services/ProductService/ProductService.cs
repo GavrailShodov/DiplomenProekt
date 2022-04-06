@@ -140,7 +140,8 @@ namespace WebAplicationForServices.Server.Services.ProductService
         public async Task<List<Product>> GetMyProducts(int userId)
         {
             var products = await context.Products.Where(u => u.UserId == userId).ToListAsync();
-            return products;
+            var result = products.Where(p => !p.Deleted).ToList();
+            return result;
         }
 
     }
