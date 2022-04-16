@@ -14,11 +14,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th></th>
+                <th>Image</th>
                 <th>Product</th>
                 
                 <th>Price</th>
-            
+                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -28,21 +28,36 @@
                 <tr>
                     <td><img src="@product.ImageUrl" /></td>
                     <td>@product.Title</td>
-                    <td>@product.Price</td>
+                    <td>@product.Price lv(per hour)</td>
+                    <td></td>
                 <td>
                     <button type="button" class="btn btn-danger float-start" @onclick="() =>DeleteProduct(product)">
-                     Delete Product
+                     Delete product
                    </button>
                 </td>
                </tr>
+               <tr>
+                    
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Phone</td>
+                    <td>Reserve date</td>
+                    <td>Reserve time</td>
+                
+               </tr>
                @foreach(var currentOrder in orders.Where(id => id.ProductId == product.Id))
             {
+                
                 <tr>
                     
                     <td>@currentOrder.Name</td>
                     <td>@currentOrder.Email</td>
                     <td>@currentOrder.Phone</td>
-                
+                    <td>@currentOrder.ReserveDate.ToString("dd/MM/yyyy")</td>
+                    <td>@currentOrder.Hour:00</td>
+                   <button type="button" class="btn btn-danger  " @onclick="() =>DeleteOrder(currentOrder)">
+                     Delete order
+                   </button>
                </tr>
             }
         }
@@ -64,15 +79,22 @@
 
     private async void DeleteProduct(Product product)
     {
-           bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
-            $"Do you really want to delete '{product.Title}'?");
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+         $"Do you really want to delete '{product.Title}'?");
         if (confirmed)
         {
             await ProductService.DeleteProduct(product);
+            products = await ProductService.GetMyProductsAsync();
             NavigationManager.NavigateTo("/myproducts");
         }
     }
-    
+
+    private async void DeleteOrder(Order order)
+    {
+        await OrderService.DeleteOrderAsync(order);
+        orders = await OrderService.GetOrdersAsync();
+    }
+
 
     void CreateProduct()
     {

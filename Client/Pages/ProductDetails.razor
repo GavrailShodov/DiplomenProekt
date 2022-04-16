@@ -21,7 +21,7 @@ else
                 @product.Description
             </p>
             <h4 class="price">
-                @product.Price lv
+                @product.Price lv(per hour)
             </h4>
 
         </div>
@@ -38,13 +38,37 @@ else
         </div>
         <div class="mb-0">
             <label for="phone">Phone</label>
-            <InputTextArea id="phone" @bind-Value="order.Phone" class="form-control"></InputTextArea>
+            <InputText id="phone" @bind-Value="order.Phone" class="form-control"></InputText>
        </div>
-       <div class="mb-0">
-       <label for="imageUrl">Price</label>
-       <InputNumber @bind-Value="product.Price" class="form-control" ></InputNumber>
+      
+        <div class="mb-2">
+        <label for="date">Reserve date</label>
+        <InputDate  @bind-Value="nowDate"  min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control"></InputDate>
         </div>
+
+        <div class="mb-2">
+         <label for="hour">Reserve hour</label>
+        <InputSelect @bind-Value="order.Hour">
+         @for(int i = 1; i<=24; i++)
+           {
+               @if(orders.Where(o => o.ProductId == Id && o.ReserveDate == nowDate).ToList().Capacity==0)
+                            {
+                            <option>@i</option>
+                            }
+                        @foreach(var currentOrder in orders.Where(o => o.ProductId == Id && o.ReserveDate == nowDate))
+            {
+               @if(currentOrder.Hour != i)
+                {
+                  <option>@i</option>
+                }
+             }
+            
+            }
+            </InputSelect>
+         </div>
+       <div class="mb-1">
     <button type="submit" class="btn btn-primary float-end">Reserve</button>
+    </div>
     <ValidationSummary></ValidationSummary>
 </EditForm>
 
@@ -57,8 +81,15 @@ else
     private Order order = new Order();
     private Product? product = null;
     private string message = string.Empty;
+    private DateTime nowDate;
+     List<Order> orders = new List<Order>();
     [Parameter]
     public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await orderService.GetOrdersAsync();
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -75,6 +106,13 @@ else
     }
 
     private async void CreateOrder()
+    {
+        order.ProductId = Id;
+        order.ReserveDate = nowDate;
+        await orderService.CreateOrderAsync(order);
+    }
+
+    private async void GetOrders()
     {
         order.ProductId = Id;
         await orderService.CreateOrderAsync(order);
