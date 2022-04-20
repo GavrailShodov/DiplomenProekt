@@ -48,22 +48,26 @@ else
 
         <div class="mb-2">
          <label for="hour">Reserve hour</label>
-        <InputSelect @bind-Value="order.Hour">
+         <InputSelect @bind-Value="order.Hour">
          @for(int i = 1; i<=24; i++)
            {
-               @if(orders.Where(o => o.ProductId == Id && o.ReserveDate == nowDate).ToList().Capacity==0)
-                            {
-                            <option>@i</option>
-                            }
                         @foreach(var currentOrder in orders.Where(o => o.ProductId == Id && o.ReserveDate == nowDate))
             {
-               @if(currentOrder.Hour != i)
+               @if(currentOrder.Hour == i && product.StartHour<=i && product.EndHour>=i)
                 {
-                  <option>@i</option>
-                }
-             }
-            
-            }
+                                <option>Reserved</option>
+                                    reservedHour = i;
+                                }
+                                
+                                
+                            }
+                        @if (product.StartHour <= i && product.EndHour >= i && reservedHour!=i)
+                            {
+
+                            <option>@i</option>
+                            }
+
+                    }
             </InputSelect>
          </div>
        <div class="mb-1">
@@ -82,7 +86,8 @@ else
     private Product? product = null;
     private string message = string.Empty;
     private DateTime nowDate;
-     List<Order> orders = new List<Order>();
+    List<Order> orders = new List<Order>();
+    private int reservedHour;
     [Parameter]
     public int Id { get; set; }
 

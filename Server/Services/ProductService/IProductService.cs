@@ -10,5 +10,6 @@
         Task<ServiceResponse<bool>> DeleteProduct(int productId);
         Task<ServiceResponse<Product>> UpdateProduct(Product product);
         Task<List<Product>> GetMyProducts(int userId);
+        Task<User> GetUserByProductId(int productId);
     }
 }

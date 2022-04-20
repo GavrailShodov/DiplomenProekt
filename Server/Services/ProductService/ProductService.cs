@@ -144,5 +144,12 @@ namespace WebAplicationForServices.Server.Services.ProductService
             return result;
         }
 
+        public async Task<User> GetUserByProductId(int productId)
+        {
+            var product = await context.Products.FindAsync(productId);
+            var result = await context.Users.FindAsync(product.UserId);
+
+            return result;
+        }
     }
     }
